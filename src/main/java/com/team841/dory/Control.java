@@ -348,7 +348,7 @@ public class Control {
 
         joystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake);
 
-        joystick.rightTrigger(0.1).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(.40), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        joystick.rightTrigger(0.1).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(.30), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
         
         joystick.a().whileTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.5), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0), flapSystem));
         

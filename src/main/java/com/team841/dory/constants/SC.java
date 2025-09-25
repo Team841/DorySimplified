@@ -116,8 +116,8 @@ public class SC {
         public static double grabMotorCurrentTrigger = 20;
         public static double grabMotorCurrentTriggerDelay = 0.5;
         
-        public static double hangDeployingDutyCycle = 0.3;
-        public static double hangHangingDutyCycle = 0.3;
+        public static double hangDeployingDutyCycle = 0.8;
+        public static double hangHangingDutyCycle = 1;
         public static double grabDutyCycle = -1;
 
         public static TalonFXConfiguration configs =

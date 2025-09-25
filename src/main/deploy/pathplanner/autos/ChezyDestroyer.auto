@@ -1,0 +1,128 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FlapDown"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ChezyDestroyer1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ChezyDestroyer7"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoL4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": true
+}

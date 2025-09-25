@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class FlapSystemAndHang extends SubsystemBase{
 
@@ -97,12 +98,14 @@ public class FlapSystemAndHang extends SubsystemBase{
     }
 
     public void startClimb() {
-        if (this.hangState.equals("Stowed")) {
-            this.setHangState("Deploying");
-            this.timer.reset();
-        }
-        if (this.hangState.equals("Deployed")) {
-            this.setHangState("Hanging");
+        if (DriverStation.getMatchTime() < 20) {
+            if (this.hangState.equals("Stowed")) {
+                this.setHangState("Deploying");
+                this.timer.reset();
+            }
+            if (this.hangState.equals("Deployed")) {
+                this.setHangState("Hanging");
+            }
         }
     }
     
