@@ -69,6 +69,9 @@ public class SC {
         public static int CanRangeIdFront = 6;
         public static int CanRangeIdBack = 2;
 
+        public static double manualShootDutyCycleL4 = 0.5;
+        public static double manualShootDutyCycleL3L2 = 0.3;
+
         public static TalonFXConfiguration configs =
                 new TalonFXConfiguration()
                         .withCurrentLimits(
