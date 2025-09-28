@@ -114,8 +114,8 @@ public class SC {
         public static int grabMotor = 16;
         public static int throughbore = 37;
 
-        public static double hangDeployedAngle = -0.12;
-        public static double hangHungAngle = 0.14;
+        public static double hangDeployedAngle = -0.117;
+        public static double hangHungAngle = 0.12;
         public static double grabMotorCurrentTrigger = 20;
         public static double grabMotorCurrentTriggerDelay = 0.5;
         
