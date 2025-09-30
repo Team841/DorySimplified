@@ -5,15 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "FlapDown"
+            "waitTime": 2.0
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "1-shot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FlapDown"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1-shot"
+                }
+              }
+            ]
           }
         },
         {
@@ -25,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "AutoL4"
           }
         }
       ]
