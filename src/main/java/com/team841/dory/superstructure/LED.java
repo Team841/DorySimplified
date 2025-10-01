@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Second;
 
+import com.team841.dory.constants.SC.flapSystem;
+
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -18,6 +20,7 @@ public class LED extends SubsystemBase{
     
     private Shooter shooter;
     private Timer timer;
+    private FlapSystemAndHang flapSystemAndHang;
 
     private final AddressableLED LED = new AddressableLED(0);
     private final AddressableLEDBuffer Buffer = new AddressableLEDBuffer(61);
@@ -46,13 +49,17 @@ public class LED extends SubsystemBase{
     LEDPattern baseRedBreathe = LEDPattern.solid(red);
     LEDPattern patternRedBreathe = baseRedBreathe.breathe(Second.of(0.25));
 
+    LEDPattern baseBlueBreathe = LEDPattern.solid(blue);
+    LEDPattern patternBlueBreathe = baseBlueBreathe.breathe(Second.of(0.15));
+
     LEDPattern patternYellowSolid = LEDPattern.solid(yellow);
     LEDPattern patternRedSolid = LEDPattern.solid(red);
     LEDPattern patternGreenSolid = LEDPattern.solid(green);
     LEDPattern patternBlueSolid = LEDPattern.solid(blue);
 
-    public LED(Shooter shooter) {
+    public LED(Shooter shooter, FlapSystemAndHang flapSystemAndHang) {
         this.shooter = shooter;
+        this.flapSystemAndHang = flapSystemAndHang;
         this.timer = new Timer();
         LED.setLength(Buffer.getLength());
         patternRedSolid.applyTo(BufferLeft);
@@ -78,6 +85,7 @@ public class LED extends SubsystemBase{
         Coral in robot, incorrect position - Red Flashing
         Coral in robot, correct position - Green Solid
         Endgame (Last 20 seconds) - Blue Scrolling (for 3 seconds, overrides other conditions), then Blue Solid (doesn't override)
+        Climb in deployed position - Blue Flashing
         */
 
         if (!DriverStation.isDSAttached()) {
@@ -86,9 +94,12 @@ public class LED extends SubsystemBase{
         } else if (DriverStation.isAutonomousEnabled()) {
             patternPurpleScroll.applyTo(BufferLeft);
             patternPurpleScroll.applyTo(BufferRight);
-        } else if (!this.timer.hasElapsed(3) && DriverStation.getMatchTime() < 20 && DriverStation.getMatchTime() > 0.01) {
+        } else if (!this.timer.hasElapsed(3) && DriverStation.getMatchTime() < 20 && DriverStation.getMatchTime() > 0.01 && DriverStation.isTeleopEnabled()) {
             patternBlueScroll.applyTo(BufferLeft);
             patternBlueScroll.applyTo(BufferRight);
+        } else if (this.flapSystemAndHang.hangState.equals("Deployed")) {
+            patternBlueBreathe.applyTo(BufferLeft);
+            patternBlueBreathe.applyTo(BufferRight);
         } else if (!this.shooter.escalatorClear()) {
             patternRedBreathe.applyTo(BufferLeft);
             patternRedBreathe.applyTo(BufferRight);

@@ -28,6 +28,8 @@ public class FlapSystemAndHang extends SubsystemBase{
 
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
     private Timer timer;
+    private boolean deployDebounce;
+    private boolean reverseHang;
 
     public String hangState;
 
@@ -53,6 +55,8 @@ public class FlapSystemAndHang extends SubsystemBase{
         this.grabMotor.setNeutralMode(NeutralModeValue.Brake);
 
         this.hangState = "Stowed";
+        this.deployDebounce = false;
+        this.reverseHang = false;
         this.timer = new Timer();
         this.timer.reset();
 
@@ -66,7 +70,10 @@ public class FlapSystemAndHang extends SubsystemBase{
         if (this.hangState.equals("Deploying")) {
             this.setHangDutyCycle(SC.flapSystem.hangDeployingDutyCycle);
             this.setGrabDutyCycle(SC.flapSystem.grabDutyCycle);
-            if (this.getHangAngle() < SC.flapSystem.hangDeployedAngle) {
+            if (this.getHangAngle() < SC.flapSystem.hangDeployedAngle - 0.01) {
+                this.deployDebounce = true;
+            }
+            if (this.getHangAngle() > SC.flapSystem.hangDeployedAngle && this.deployDebounce == true) {
                 this.setHangState("Deployed");
             }
         } else if (this.hangState.equals("Deployed")) {
@@ -83,8 +90,10 @@ public class FlapSystemAndHang extends SubsystemBase{
                 this.setHangState("Hung");
             }
         } else {
-            this.setGrabDutyCycle(0);
-            this.setHangDutyCycle(0);
+            if (this.reverseHang == false) {
+                this.setGrabDutyCycle(0);
+                this.setHangDutyCycle(0);
+            }
         }
     }
 
@@ -107,6 +116,21 @@ public class FlapSystemAndHang extends SubsystemBase{
                 this.setHangState("Hanging");
             }
         }
+    }
+
+    public void reverseClimb() {
+        this.reverseHang = true;
+        this.setHangState("Reversing");
+        this.setHangDutyCycle(-0.8);
+        this.setGrabDutyCycle(0);
+        this.deployDebounce = false;
+    }
+
+    public void stopClimb() {
+        this.setHangDutyCycle(0);
+        this.reverseHang = false;
+        this.setHangState("Stowed");
+        this.deployDebounce = false;
     }
     
     private void setHangState(String state) {
