@@ -239,7 +239,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         CharlieTable.getEntry("camerapose_robotspace_set").setDoubleArray(RC.Vision.CharliePose);
 
         Rotation2d gyroAngle = this.getState().Pose.getRotation();
-        double gyroAngularVelocity = this.getState().Speeds.omegaRadiansPerSecond;
+        double gyroAngularVelocity = Math.toDegrees(this.getState().Speeds.omegaRadiansPerSecond);
         try {
             LimelightHelpers.SetIMUMode(RC.Vision.LimelightGammaName, 1);
             LimelightHelpers.SetIMUMode(RC.Vision.LimelightCharlieName, 1);
