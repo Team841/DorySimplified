@@ -36,8 +36,8 @@ public class RC {
         public static String LimelightCharlieName = "limelight-charlie";
         public static String LimelightGammaName = "limelight-gamma";
         // x y z roll pitch yaw
-        public static double[] CharliePose = {0.1593, 0.225377, 0.2214, 0.0, 12.76, 0.0};
-        public static double[] GammaPose = {0.1593, -0.225377, 0.2214, 0.0, 12.76, 0.0};
+        public static double[] CharliePose = {0.1593, 0.225377, 0.2214, 0.0, 12.76, 0.5};
+        public static double[] GammaPose = {0.1593, -0.225377, 0.2214, 0.0, 12.76, 0.2};
     }
 
     public enum Mode {
