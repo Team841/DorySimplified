@@ -94,12 +94,12 @@ public class LED extends SubsystemBase{
         } else if (DriverStation.isAutonomousEnabled()) {
             patternPurpleScroll.applyTo(BufferLeft);
             patternPurpleScroll.applyTo(BufferRight);
-        } else if (!this.timer.hasElapsed(3) && DriverStation.getMatchTime() < 20 && DriverStation.getMatchTime() > 0.01 && DriverStation.isTeleopEnabled()) {
-            patternBlueScroll.applyTo(BufferLeft);
-            patternBlueScroll.applyTo(BufferRight);
         } else if (this.flapSystemAndHang.hangState.equals("Deployed")) {
             patternBlueBreathe.applyTo(BufferLeft);
             patternBlueBreathe.applyTo(BufferRight);
+        } else if (!this.timer.hasElapsed(3) && DriverStation.getMatchTime() < 20 && DriverStation.getMatchTime() > 0.01 && DriverStation.isTeleopEnabled()) {
+            patternBlueScroll.applyTo(BufferLeft);
+            patternBlueScroll.applyTo(BufferRight);
         } else if (!this.shooter.escalatorClear()) {
             patternRedBreathe.applyTo(BufferLeft);
             patternRedBreathe.applyTo(BufferRight);
