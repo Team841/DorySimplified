@@ -116,10 +116,10 @@ public class SC {
 
         public static double hangDeployedAngle = -0.16;
         public static double hangHungAngle = 0.12;
-        public static double grabMotorCurrentTrigger = 20;
+        public static double grabMotorCurrentTrigger = 30;
         public static double grabMotorCurrentTriggerDelay = 0.5;
         
-        public static double hangDeployingDutyCycle = 0.8;
+        public static double hangDeployingDutyCycle = 0.4;
         public static double hangHangingDutyCycle = 1;
         public static double grabDutyCycle = -1;
 
@@ -128,6 +128,14 @@ public class SC {
                         .withCurrentLimits(
                                 new CurrentLimitsConfigs()
                                         .withStatorCurrentLimit(60)
+                                        .withStatorCurrentLimitEnable(true)
+        );
+
+        public static TalonFXConfiguration climbConfigs =
+                new TalonFXConfiguration()
+                        .withCurrentLimits(
+                                new CurrentLimitsConfigs()
+                                        .withStatorCurrentLimit(120)
                                         .withStatorCurrentLimitEnable(true)
         );
 

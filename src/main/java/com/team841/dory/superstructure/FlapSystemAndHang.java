@@ -48,7 +48,7 @@ public class FlapSystemAndHang extends SubsystemBase{
 
         this.canrange.getConfigurator().apply(SC.flapSystem.CanrangeConfigs);
 
-        this.hangMotor.getConfigurator().apply(SC.flapSystem.configs);
+        this.hangMotor.getConfigurator().apply(SC.flapSystem.climbConfigs);
         this.hangMotor.setNeutralMode(NeutralModeValue.Brake);
 
         this.grabMotor.getConfigurator().apply(SC.flapSystem.configs);

@@ -371,6 +371,6 @@ public class Control {
 
         joystick.rightStick().onTrue(new InstantCommand(() -> this.flapSystem.startClimb(), flapSystem));
 
-        joystick.leftStick().whileTrue(new InstantCommand(() -> this.flapSystem.reverseClimb(), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.stopClimb(), flapSystem));
+        //joystick.leftStick().whileTrue(new InstantCommand(() -> this.flapSystem.reverseClimb(), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.stopClimb(), flapSystem));
     }
 }
