@@ -29,6 +29,7 @@ public class FlapSystemAndHang extends SubsystemBase{
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
     private Timer timer;
     private boolean deployDebounce;
+    private boolean deployDutyCycleSlow;
     private boolean reverseHang;
 
     public String hangState;
@@ -56,6 +57,7 @@ public class FlapSystemAndHang extends SubsystemBase{
 
         this.hangState = "Stowed";
         this.deployDebounce = false;
+        this.deployDutyCycleSlow = false;
         this.reverseHang = false;
         this.timer = new Timer();
         this.timer.reset();
@@ -67,9 +69,20 @@ public class FlapSystemAndHang extends SubsystemBase{
         DogLog.log("FlapSystemAndHang/HangAngle", this.getHangAngle());
         DogLog.log("FlapSystemAndHang/HangState", this.hangState);
 
+        this.climbPeriodic();
+    }
+
+    private void climbPeriodic() {
         if (this.hangState.equals("Deploying")) {
-            this.setHangDutyCycle(SC.flapSystem.hangDeployingDutyCycle);
-            this.setGrabDutyCycle(SC.flapSystem.grabDutyCycle);
+            this.setGrabDutyCycle(0);
+            if (this.deployDutyCycleSlow == false) {
+                this.setHangDutyCycle(SC.flapSystem.hangDeployingDutyCycle);
+            } else {
+                this.setHangDutyCycle(SC.flapSystem.hangDeployingDutyCycle2);
+            }
+            if (this.getHangAngle() < SC.flapSystem.hangDeployedAngle + 0.01) {
+                this.deployDutyCycleSlow = true;
+            }
             if (this.getHangAngle() < SC.flapSystem.hangDeployedAngle - 0.01) {
                 this.deployDebounce = true;
             }
@@ -78,6 +91,7 @@ public class FlapSystemAndHang extends SubsystemBase{
             }
         } else if (this.hangState.equals("Deployed")) {
             this.setHangDutyCycle(0);
+            this.setGrabDutyCycle(SC.flapSystem.grabDutyCycle);
             if (this.grabMotor.getStatorCurrent().getValueAsDouble() > SC.flapSystem.grabMotorCurrentTrigger) {
                 this.timer.start();
                 if (this.timer.hasElapsed(SC.flapSystem.grabMotorCurrentTriggerDelay)) {
@@ -96,7 +110,7 @@ public class FlapSystemAndHang extends SubsystemBase{
             }
         }
     }
-
+    
     public Command runIntake() {
         return new RunCommand(
                 () -> {
@@ -124,6 +138,7 @@ public class FlapSystemAndHang extends SubsystemBase{
         this.setHangDutyCycle(-0.8);
         this.setGrabDutyCycle(0);
         this.deployDebounce = false;
+        this.deployDutyCycleSlow = false;
     }
 
     public void stopClimb() {
@@ -131,6 +146,7 @@ public class FlapSystemAndHang extends SubsystemBase{
         this.reverseHang = false;
         this.setHangState("Stowed");
         this.deployDebounce = false;
+        this.deployDutyCycleSlow = false;
     }
     
     private void setHangState(String state) {

@@ -119,7 +119,8 @@ public class SC {
         public static double grabMotorCurrentTrigger = 30;
         public static double grabMotorCurrentTriggerDelay = 0.5;
         
-        public static double hangDeployingDutyCycle = 0.4;
+        public static double hangDeployingDutyCycle = 1;
+        public static double hangDeployingDutyCycle2 = 0.4;
         public static double hangHangingDutyCycle = 1;
         public static double grabDutyCycle = -1;
 
