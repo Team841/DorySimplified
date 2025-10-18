@@ -126,7 +126,7 @@ public class Escalator extends SubsystemBase{
      */
     public enum Position {
         HomeAndIntake(0),
-        L1(1),
+        L1(3),
         L2(5.118 - 0.26123),
         L3(11.5463 - 0.26123),
         L4(22.0844 - 0.26123 + 0.45),

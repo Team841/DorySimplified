@@ -54,6 +54,7 @@ public class Control {
     public final Command noSnapAutoScoreL4;
     public final Command noSnapAutoScoreL3;
     public final Command noSnapAutoScoreL2;
+    public final Command noSnapAutoScoreL1;
 
     public final Command escalatorGoHome;
 
@@ -187,6 +188,15 @@ public class Control {
                         this.shooter::shooterHasCoral,
                         this.shooter::escalatorClear),
                 this.shooter.runShooterScore(Escalator.Position.L3, scoreTimeout),
+                new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
+                .onlyIf(this.shooter::escalatorClear);
+        this.noSnapAutoScoreL1 = new SequentialCommandGroup(
+                new MoveCommand(
+                        this.escalator,
+                        Escalator.Position.L1,
+                        this.shooter::shooterHasCoral,
+                        this.shooter::escalatorClear),
+                this.shooter.runShooterScore(Escalator.Position.L1, scoreTimeout),
                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
                 .onlyIf(this.shooter::escalatorClear);
 
@@ -334,6 +344,8 @@ public class Control {
 
         joystick.leftBumper().and(joystick.b()).whileTrue(noSnapAutoScoreL2);
 
+        joystick.leftBumper().and(joystick.a()).whileTrue(noSnapAutoScoreL1);
+
         joystick.leftBumper().onFalse(escalatorGoHome);
 
         /* Automated */
@@ -350,10 +362,13 @@ public class Control {
         joystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake);
 
         joystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL4), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
-        joystick.rightTrigger(0.1).and(() -> !this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        
+        joystick.rightTrigger(0.1).and(() -> !this.escalator.getTarget().equals(Position.L4)).and(() -> !this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        
+        joystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL1), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
 
-        joystick.a().whileTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.5), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0), flapSystem));
-        joystick.a().whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(-.5), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        // joystick.a().whileTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.5), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0), flapSystem));
+        // Zjoystick.a().whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(-.5), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
 
         // joystick.start().onTrue(new InstantCommand(escalator::zero, escalator));
 

@@ -71,6 +71,7 @@ public class SC {
 
         public static double manualShootDutyCycleL4 = 0.5;
         public static double manualShootDutyCycleL3L2 = 0.3;
+        public static double manualShootDutyCycleL1 = 0.13;
 
         public static TalonFXConfiguration configs =
                 new TalonFXConfiguration()
@@ -114,8 +115,8 @@ public class SC {
         public static int grabMotor = 16;
         public static int throughbore = 37;
 
-        public static double hangDeployedAngle = -0.16;
-        public static double hangHungAngle = 0.12;
+        public static double hangDeployedAngle = -0.125;
+        public static double hangHungAngle = 0.118;
         public static double grabMotorCurrentTrigger = 30;
         public static double grabMotorCurrentTriggerDelay = 0.5;
         

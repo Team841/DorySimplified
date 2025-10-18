@@ -68,8 +68,15 @@ public class FlapSystemAndHang extends SubsystemBase{
     public void periodic() {
         DogLog.log("FlapSystemAndHang/HangAngle", this.getHangAngle());
         DogLog.log("FlapSystemAndHang/HangState", this.hangState);
+        DogLog.log("FlapSystemAndHang/HangGoodToRun", this.hangGoodToRun());
 
-        this.climbPeriodic();
+        if (this.hangGoodToRun()) {
+            this.climbPeriodic();
+        } else {
+            this.setHangDutyCycle(0);
+            this.setGrabDutyCycle(0);
+        }
+        
     }
 
     private void climbPeriodic() {
@@ -159,6 +166,10 @@ public class FlapSystemAndHang extends SubsystemBase{
 
     public double getHangAngle() {
         return this.throughbore.getAbsolutePosition().getValueAsDouble();
+    }
+
+    public boolean hangGoodToRun() {
+        return this.getHangAngle() < 0.123;
     }
 
     public void setIntakeDutyCycle(double output) {
