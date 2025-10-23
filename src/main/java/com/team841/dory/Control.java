@@ -25,6 +25,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -385,6 +386,9 @@ public class Control {
                 .onFalse(new InstantCommand(() -> this.flapSystem.stopFlapper(), flapSystem));
 
         joystick.rightStick().onTrue(new InstantCommand(() -> this.flapSystem.startClimb(), flapSystem));
+
+        joystick.leftStick().onTrue(new InstantCommand(() -> this.shooter.setDutyCycle(-0.25))).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0)));
+        joystick.leftStick().onTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.25))).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0)));
 
         //joystick.leftStick().whileTrue(new InstantCommand(() -> this.flapSystem.reverseClimb(), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.stopClimb(), flapSystem));
     }
