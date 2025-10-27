@@ -116,7 +116,7 @@ public class Shooter extends SubsystemBase{
         Stopped(0),
         ShootL2AndL3(0.4),
         ShootL4(0.8),
-        ShooterL1(0.13);
+        ShooterL1(0.17);
 
         private final double dutyCycle;
 

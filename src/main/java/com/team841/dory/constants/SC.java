@@ -71,7 +71,7 @@ public class SC {
 
         public static double manualShootDutyCycleL4 = 0.5;
         public static double manualShootDutyCycleL3L2 = 0.3;
-        public static double manualShootDutyCycleL1 = 0.13;
+        public static double manualShootDutyCycleL1 = 0.17;
 
         public static TalonFXConfiguration configs =
                 new TalonFXConfiguration()
