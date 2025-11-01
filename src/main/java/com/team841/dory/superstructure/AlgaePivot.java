@@ -33,7 +33,7 @@ public class AlgaePivot extends SubsystemBase {
     @Override
     public void periodic() {
         Angle pivotMotorPos = pivotMotor.getPosition().getValue();
-        DogLog.log("AlgaePivot/AtSotow", this.atPosition(AlgaePivotPosition.Stow));
+        DogLog.log("AlgaePivot/AtStow", this.atPosition(AlgaePivotPosition.Stow));
         DogLog.log("AlgaePivot/TargetPosition", this.pivotTargetPosition.toString());
         DogLog.log("AlgaePivot/PositionRadian", pivotMotorPos.in(Units.Rotation));
     }
