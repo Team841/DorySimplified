@@ -63,6 +63,9 @@ public class Shooter extends SubsystemBase{
         return (this.FrontCANrange.getDistance().getValue().magnitude() < 0.08 && this.BackCANrange.getDistance().getValue().magnitude() > 0.08);
     }
 
+    public double shooterCurrent() {
+        return this.motor.getStatorCurrent().getValueAsDouble();
+    }
 
     public StatusCode setControl(DutyCycleOut control) {
         return this.motor.setControl(control);
