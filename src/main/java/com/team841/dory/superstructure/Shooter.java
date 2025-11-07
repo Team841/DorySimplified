@@ -63,6 +63,13 @@ public class Shooter extends SubsystemBase{
         return (this.FrontCANrange.getDistance().getValue().magnitude() < 0.08 && this.BackCANrange.getDistance().getValue().magnitude() > 0.08);
     }
 
+    public double shooterCurrent() {
+        return this.motor.getStatorCurrent().getValueAsDouble();
+    }
+
+    public boolean hasAlgae() {
+        return this.motor.getStatorCurrent().getValueAsDouble() > 30;
+    }
 
     public StatusCode setControl(DutyCycleOut control) {
         return this.motor.setControl(control);
@@ -87,6 +94,14 @@ public class Shooter extends SubsystemBase{
                         setDutyCycle(ShooterSpeeds.ShootL4);
                     } else if (atPosition == Escalator.Position.L1) {
                         setDutyCycle(ShooterSpeeds.ShooterL1);
+                    } else if (atPosition == Escalator.Position.Barge) {
+                        setDutyCycle(ShooterSpeeds.Barge);
+                    } else if (atPosition == Escalator.Position.HighAlgae) {
+                        setDutyCycle(ShooterSpeeds.AlgaeIntake);
+                    } else if (atPosition == Escalator.Position.LowAlgae) {
+                        setDutyCycle(ShooterSpeeds.AlgaeIntake);
+                    } else if (atPosition == Escalator.Position.HomeAndIntake) {
+                        setDutyCycle(ShooterSpeeds.Processor);
                     }
                 }
         ).withName("runShooterScoreCommand")
@@ -116,7 +131,10 @@ public class Shooter extends SubsystemBase{
         Stopped(0),
         ShootL2AndL3(0.4),
         ShootL4(0.8),
-        ShooterL1(0.17);
+        ShooterL1(0.17),
+        AlgaeIntake(0.4),
+        Barge(-0.3),
+        Processor(-0.5);
 
         private final double dutyCycle;
 

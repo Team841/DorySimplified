@@ -18,6 +18,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.team841.dory.constants.TunerConstants;
 import com.team841.dory.drive.Drivetrain;
+import com.team841.dory.superstructure.AlgaePivot;
 import com.team841.dory.superstructure.Escalator;
 import com.team841.dory.superstructure.FlapSystemAndHang;
 import com.team841.dory.superstructure.Shooter;
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
   private final Escalator escalator;
   private final Shooter shooter;
   private final FlapSystemAndHang flapSystem;
+  private final AlgaePivot algaePivot;
 //  private final LED led;
 
   private final Control control;
@@ -50,9 +52,10 @@ public class Robot extends TimedRobot {
     this.escalator = new Escalator();
     this.shooter = new Shooter();
     this.flapSystem = new FlapSystemAndHang();
+    this.algaePivot = new AlgaePivot();
 //    this.led = new LED(this.shooter, this.flapSystem);
     
-    this.control = new Control(drivetrain, escalator, shooter, flapSystem);
+    this.control = new Control(drivetrain, escalator, algaePivot, shooter, flapSystem);
     
     DogLog.setOptions(new DogLogOptions().withLogExtras(true).withCaptureDs(true).withCaptureNt(true));
 
