@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private final Escalator escalator;
   private final Shooter shooter;
   private final FlapSystemAndHang flapSystem;
-  private final LED led;
+//  private final LED led;
 
   private final Control control;
 
@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
     this.escalator = new Escalator();
     this.shooter = new Shooter();
     this.flapSystem = new FlapSystemAndHang();
-    this.led = new LED(this.shooter, this.flapSystem);
+//    this.led = new LED(this.shooter, this.flapSystem);
     
     this.control = new Control(drivetrain, escalator, shooter, flapSystem);
     

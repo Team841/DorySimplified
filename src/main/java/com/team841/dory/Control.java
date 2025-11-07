@@ -245,18 +245,20 @@ public class Control {
      * @return Command
      */
     public Command Intake() {
-        return new ConditionalCommand(
-                new ParallelRaceGroup(
-                        this.shooter.runShooterIntake(), this.flapSystem.runIntake()
-                ), new SequentialCommandGroup(
-                        this.escalator.passiveHoldDown().withTimeout(0.2), new ParallelRaceGroup(
-                                this.shooter.runShooterIntake(), this.flapSystem.runIntake()
-                        )
+//        return new ConditionalCommand(
+//                new ParallelRaceGroup(
+//                        this.shooter.runShooterIntake(), this.flapSystem.runIntake()
+//                ), new SequentialCommandGroup(
+//                        this.escalator.passiveHoldDown().withTimeout(0.2), new ParallelRaceGroup(
+//                                this.shooter.runShooterIntake(), this.flapSystem.runIntake()
+//                        )
+//
+//                ).onlyIf(this.shooter::escalatorClear), // Make sure that the elevator is clear before running.
+//                // move elevator down if not at intaking position
+//                () -> this.escalator.atPosition(Escalator.Position.HomeAndIntake)
+//        );
 
-                ).onlyIf(this.shooter::escalatorClear), // Make sure that the elevator is clear before running.
-                // move elevator down if not at intaking position
-                () -> this.escalator.atPosition(Escalator.Position.HomeAndIntake)
-        );
+        return new ParallelCommandGroup(this.shooter.runShooterIntake(), this.flapSystem.runIntake());
     }
 
     /**
