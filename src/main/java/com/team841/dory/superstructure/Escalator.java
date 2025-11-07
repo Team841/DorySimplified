@@ -4,6 +4,8 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team841.dory.constants.RC;
@@ -23,8 +25,7 @@ public class Escalator extends SubsystemBase{
 
     Follower leftFollower = new Follower(SC.Escalator.right, true);
 
-    MotionMagicTorqueCurrentFOC withOutCoralControl = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
-    MotionMagicTorqueCurrentFOC withCoralControl = new MotionMagicTorqueCurrentFOC(0).withSlot(1);
+    MotionMagicExpoVoltage control = new MotionMagicExpoVoltage(0).withSlot(0);
     DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
     StatusCode[] latestStatus;
@@ -59,9 +60,9 @@ public class Escalator extends SubsystemBase{
      */
     public void setPosition(Position position, boolean hasCoral) {
         if (hasCoral) {
-            this.latestStatus = setControl(withCoralControl.withPosition(position.getPosition()));
+            this.latestStatus = setControl(control.withPosition(position.getPosition()));
         } else {
-            this.latestStatus = setControl(withOutCoralControl.withPosition(position.getPosition()));
+            this.latestStatus = setControl(control.withPosition(position.getPosition()));
         }
 
         this.targetPosition = position;
