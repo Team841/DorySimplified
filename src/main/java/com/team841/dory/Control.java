@@ -363,19 +363,19 @@ public class Control {
 
         joystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake);
 
-        joystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL4), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        joystick.rightTrigger().and(() -> this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL4), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
         
-        joystick.rightTrigger(0.1).and(() -> !this.escalator.getTarget().equals(Position.L4)).and(() -> !this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        joystick.rightTrigger().and(() -> !this.escalator.getTarget().equals(Position.L4)).and(() -> !this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
         
-        joystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL1), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        joystick.rightTrigger().and(() -> this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL1), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
 
         cojoystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake);
 
-        cojoystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL4), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        cojoystick.rightTrigger().and(() -> this.escalator.getTarget().equals(Position.L4)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL4), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
         
-        cojoystick.rightTrigger(0.1).and(() -> !this.escalator.getTarget().equals(Position.L4)).and(() -> !this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        cojoystick.rightTrigger().and(() -> !this.escalator.getTarget().equals(Position.L4)).and(() -> !this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL3L2), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
         
-        cojoystick.rightTrigger(0.1).and(() -> this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL1), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
+        cojoystick.rightTrigger().and(() -> this.escalator.getTarget().equals(Position.L1)).whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(SC.Shooter.manualShootDutyCycleL1), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
 
         // joystick.a().whileTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.5), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0), flapSystem));
         // Zjoystick.a().whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(-.5), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
