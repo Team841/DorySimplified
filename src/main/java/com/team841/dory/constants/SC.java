@@ -18,7 +18,8 @@ public class SC {
                         .withKP(2)
                         .withKD(0)
                         .withKS(0)
-                        .withKA(0.12)
+                        .withKV(0.12)
+                        .withKA(0.001)
                         .withKG(0.288)
                         .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
@@ -57,58 +58,48 @@ public class SC {
     }
 
     public static class AlgaePivot {
-        public static int pivotMotorId = -1;
+        public static int pivotMotorId = 40;
 
-        // without algae
-        public static Slot0Configs slot0Configs =
+        // PID for both with and without algae, kG is not neccesary, so motion can be static
+        public static Slot0Configs slot0PivotConfigs =
                 new Slot0Configs()
-                        .withKP(125)
+                        .withKP(2)
                         .withKD(0)
-                        .withKS(0.24274)
+                        .withKS(0)
                         .withKA(0)
-                        .withKV(0)
-                        .withKG(0.66177)
-                        .withGravityType(GravityTypeValue.Arm_Cosine)
-                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
-        // with algae
-        public static Slot1Configs slot1Configs =
-                new Slot1Configs()
-                        .withKP(125)
-                        .withKD(0)
-                        .withKS(0.65347)
-                        .withKA(0)
-                        .withKV(0)
-                        .withKG(2.0762)
-                        .withGravityType(GravityTypeValue.Arm_Cosine)
+                        .withKV(0.12)
+                        .withKG(0)
+                        .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
 
         public static final TalonFXConfiguration pivotConfigs =
                 new TalonFXConfiguration()
-                        .withSlot0(slot0Configs)
-                        .withSlot1(slot1Configs)
+                        .withSlot0(slot0PivotConfigs)
                         .withCurrentLimits(new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(60)
+                                .withStatorCurrentLimit(20)
                                 .withStatorCurrentLimitEnable(true)
                                 .withSupplyCurrentLimitEnable(true))
                         .withFeedback(
                                 new FeedbackConfigs()
                                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
-                                        .withRotorToSensorRatio(87.8571428571)
-                                        .withFeedbackRotorOffset(0))
+                                        .withRotorToSensorRatio(1))
                         .withMotionMagic(
                                 new MotionMagicConfigs()
-                                        .withMotionMagicAcceleration(2)
-                                        .withMotionMagicCruiseVelocity(5))
+                                        .withMotionMagicCruiseVelocity(50)        
+                                        .withMotionMagicAcceleration(6)
+                                        .withMotionMagicJerk(1)
+                                        .withMotionMagicExpo_kA(0.12)
+                                        .withMotionMagicExpo_kV(0.1))
                         .withMotorOutput(
                                 new MotorOutputConfigs()
-                                        .withNeutralMode(NeutralModeValue.Brake))
-                        //.withSoftwareLimitSwitch(
-                        //        new SoftwareLimitSwitchConfigs()
-                        //                .withForwardSoftLimitEnable(true)
-                        //                .withReverseSoftLimitEnable(true)
-                        //                .withForwardSoftLimitThreshold(23)
-                        //                .withReverseSoftLimitThreshold(0))
-                        ;
+                                        .withNeutralMode(NeutralModeValue.Brake)
+                                        .withInverted(InvertedValue.Clockwise_Positive))
+                        .withSoftwareLimitSwitch(
+                                new SoftwareLimitSwitchConfigs()
+                                        .withForwardSoftLimitEnable(true)
+                                        .withReverseSoftLimitEnable(true)
+                                        .withForwardSoftLimitThreshold(32)
+                                        .withReverseSoftLimitThreshold(0));
     }
 
     public static class Shooter {

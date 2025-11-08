@@ -3,8 +3,9 @@ package com.team841.dory.superstructure;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team841.dory.constants.SC;
 
 import dev.doglog.DogLog;
@@ -16,8 +17,7 @@ public class AlgaePivot extends SubsystemBase {
     
     TalonFX pivotMotor = new TalonFX(SC.AlgaePivot.pivotMotorId, "rio");
 
-    MotionMagicTorqueCurrentFOC withOutAlgaeControl = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
-    MotionMagicTorqueCurrentFOC withAlgaeControl = new MotionMagicTorqueCurrentFOC(0).withSlot(1);
+    MotionMagicExpoVoltage pivotControl = new MotionMagicExpoVoltage(0).withSlot(0);
     
     DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
@@ -27,6 +27,7 @@ public class AlgaePivot extends SubsystemBase {
 
     public AlgaePivot() {
         this.pivotMotor.getConfigurator().apply(SC.AlgaePivot.pivotConfigs);
+        this.pivotMotor.setNeutralMode(NeutralModeValue.Brake);
         this.resetPositions(0);
     }
 
@@ -39,12 +40,8 @@ public class AlgaePivot extends SubsystemBase {
     }
 
     public void setPosition(AlgaePivotPosition position, boolean hasAlgae) {
-        if (hasAlgae) {
-            this.latestStatus = setControl(withAlgaeControl.withPosition(position.getPosition()));
-        } else {
-            this.latestStatus = setControl(withOutAlgaeControl.withPosition(position.getPosition()));
-        }
-
+            
+        this.latestStatus = setControl(pivotControl.withPosition(position.getPosition()));
         this.pivotTargetPosition = position;
     }
 
@@ -65,12 +62,12 @@ public class AlgaePivot extends SubsystemBase {
     }
 
     public enum AlgaePivotPosition {
-        ReefPickup(0),
-        GroundPickup(0),
-        BargeScore(0),
-        ProcessorScore(0),
+        ReefPickup(7),
+        GroundPickup(4),
+        BargeScore(32),
+        ProcessorScore(5),
         Stow(0),
-        AlgaeStow(0);
+        AlgaeStow(3);
 
         private final double rotationsPosition;
 

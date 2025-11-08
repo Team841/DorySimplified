@@ -127,14 +127,15 @@ public class Shooter extends SubsystemBase{
      * Preset speeds for the shooter motor. These are tuned and the speeds are different for each scoring location.
      */
     public enum ShooterSpeeds {
-        Intake(0.15),
+        Intake(-0.15),
         Stopped(0),
-        ShootL2AndL3(0.4),
-        ShootL4(0.8),
-        ShooterL1(0.17),
-        AlgaeIntake(0.4),
-        Barge(-0.3),
-        Processor(-0.5);
+        ShootL2AndL3(-0.4),
+        ShootL4(-0.8),
+        ShooterL1(-0.17),
+        AlgaeIntake(-0.4),
+        Barge(0.3),
+        Processor(0.5),
+        AlgaeHold(-0.1);
 
         private final double dutyCycle;
 
