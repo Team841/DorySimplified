@@ -188,9 +188,11 @@ public class Control {
                                 this.shooter::escalatorClear),
                         this.shooter.runShooterScore(
                                 Escalator.Position.L3, scoreTimeout),
-                        new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
-                        .onlyIf(this.shooter::escalatorClear
-                ), 
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false))
+                                .onlyIf(this.shooter::escalatorClear), 
+                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)))
+                ),
                 
                 // Barge Score
                 new SequentialCommandGroup(
@@ -227,9 +229,11 @@ public class Control {
                                 this.shooter::escalatorClear),
                         this.shooter.runShooterScore(
                                 Escalator.Position.L3, scoreTimeout),
-                        new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
-                        .onlyIf(this.shooter::escalatorClear
-                ), 
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false))
+                                .onlyIf(this.shooter::escalatorClear), 
+                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)))
+                ),
                 
                 // High Algae
                 new SequentialCommandGroup(
@@ -266,9 +270,11 @@ public class Control {
                                 this.shooter::escalatorClear),
                         this.shooter.runShooterScore(
                                 Escalator.Position.L2, scoreTimeout),
-                        new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
-                        .onlyIf(this.shooter::escalatorClear
-                ), 
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false))
+                                .onlyIf(this.shooter::escalatorClear), 
+                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)))
+                ),
                 
                 // Low Algae
                 new SequentialCommandGroup(
@@ -305,9 +311,11 @@ public class Control {
                                 this.shooter::escalatorClear),
                         this.shooter.runShooterScore(
                                 Escalator.Position.L1, scoreTimeout),
-                        new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)))
-                        .onlyIf(this.shooter::escalatorClear
-                ), 
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false))
+                                .onlyIf(this.shooter::escalatorClear), 
+                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)))
+                ),
                 
                 // Low Algae
                 new SequentialCommandGroup(
@@ -336,30 +344,32 @@ public class Control {
 
         this.intake = new ConditionalCommand(
                 new ParallelCommandGroup(
+                        new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)),
                         this.shooter.runShooterIntake(), 
                         this.flapSystem.runIntake()
                 ), 
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeIntake), shooter).until(() -> this.shooter.hasAlgae()),
-                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter)
+                new ConditionalCommand(
+                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeIntake), shooter),
+                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter),
+                        (() -> !this.shooter.hasAlgae())
                 ), 
                 () -> this.isCoralMode);
 
         //this.manualShoot = ManualShoot(this.escalator.getTarget());
 
         this.manualShoot = new ConditionalCommand(
-                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL2AndL3)), 
-                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Barge)), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL2AndL3), shooter), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Barge), shooter), 
                 () -> this.isCoralMode);
         
         this.stopShooter = new ConditionalCommand(
-                new InstantCommand(() -> this.shooter.setDutyCycle(0)), 
-                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold)), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter), 
                 () -> this.isCoralMode);
 
         this.algaeIntake = new ConditionalCommand(
-                new InstantCommand(() -> this.shooter.setDutyCycle(-0.5)), 
-                new InstantCommand(() -> this.shooter.setDutyCycle(-0.1)), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeIntake), shooter), 
+                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter), 
                 () -> this.shooter.hasAlgae());
 
         this.escalatorGoHome =

@@ -37,9 +37,9 @@ public class SC {
                                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
                         .withMotionMagic(
                                 new MotionMagicConfigs()
-                                        .withMotionMagicAcceleration(175)
-                                        .withMotionMagicCruiseVelocity(100)
-                                        .withMotionMagicJerk(50)
+                                        .withMotionMagicAcceleration(600)
+                                        .withMotionMagicCruiseVelocity(120)
+                                        .withMotionMagicJerk(200)
                                         .withMotionMagicExpo_kA(0.1)
                                         .withMotionMagicExpo_kV(0.12))
                         .withMotorOutput(

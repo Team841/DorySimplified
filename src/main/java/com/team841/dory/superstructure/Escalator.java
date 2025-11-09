@@ -130,9 +130,9 @@ public class Escalator extends SubsystemBase{
         L3(21.2),
         L4(40.5),
         Hold(7.0), Other(-1),
-        Barge(40),
-        HighAlgae(28),
-        LowAlgae(15),
+        Barge(35),
+        HighAlgae(24),
+        LowAlgae(13),
         ;
 
         private final double position;

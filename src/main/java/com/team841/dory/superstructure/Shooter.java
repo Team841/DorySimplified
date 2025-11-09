@@ -38,6 +38,8 @@ public class Shooter extends SubsystemBase{
     public void periodic() {
         DogLog.log("Shooter/isclear", this.escalatorClear());
         DogLog.log("Shooter/hasCoral", this.shooterHasCoral());
+        DogLog.log("Shooter/hasAlgae", this.hasAlgae());
+        DogLog.log("Shooter/shooterCurrent", this.shooterCurrent());
     }
 
     public void setDutyCycle(double output) {
@@ -133,9 +135,9 @@ public class Shooter extends SubsystemBase{
         ShootL4(-0.8),
         ShooterL1(-0.17),
         AlgaeIntake(-0.4),
-        Barge(0.3),
+        Barge(0.6),
         Processor(0.5),
-        AlgaeHold(-0.1);
+        AlgaeHold(-0.12);
 
         private final double dutyCycle;
 
