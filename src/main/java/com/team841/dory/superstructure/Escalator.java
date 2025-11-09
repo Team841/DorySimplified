@@ -125,14 +125,14 @@ public class Escalator extends SubsystemBase{
      */
     public enum Position {
         HomeAndIntake(0),
-        L1(4.5),
-        L2(9.12),
-        L3(21.2),
-        L4(40.5),
-        Hold(7.0), Other(-1),
-        Barge(35),
-        HighAlgae(24),
-        LowAlgae(13),
+        L1(4.5 * 0.5555),
+        L2(9.12 * 0.5555),
+        L3(21.2 * 0.5555),
+        L4(40.5 * 0.5555),
+        Hold(7.0 * 0.5555), Other(-1),
+        Barge(35 * 0.5555),
+        HighAlgae(24 * 0.5555),
+        LowAlgae(13 * 0.5555),
         ;
 
         private final double position;

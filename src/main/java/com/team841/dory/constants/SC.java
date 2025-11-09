@@ -15,7 +15,7 @@ public class SC {
         // with out coral
         public static Slot0Configs slot0Configs =
                 new Slot0Configs()
-                        .withKP(2)
+                        .withKP(1)
                         .withKD(0)
                         .withKS(0)
                         .withKV(0.12)
@@ -37,9 +37,9 @@ public class SC {
                                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
                         .withMotionMagic(
                                 new MotionMagicConfigs()
-                                        .withMotionMagicAcceleration(600)
-                                        .withMotionMagicCruiseVelocity(120)
-                                        .withMotionMagicJerk(200)
+                                        .withMotionMagicCruiseVelocity(60)
+                                        .withMotionMagicAcceleration(25)
+                                        .withMotionMagicJerk(5)
                                         .withMotionMagicExpo_kA(0.1)
                                         .withMotionMagicExpo_kV(0.12))
                         .withMotorOutput(
@@ -49,7 +49,7 @@ public class SC {
                                 new SoftwareLimitSwitchConfigs()
                                         .withForwardSoftLimitEnable(true)
                                         .withReverseSoftLimitEnable(true)
-                                        .withForwardSoftLimitThreshold(42)
+                                        .withForwardSoftLimitThreshold(23)
                                         .withReverseSoftLimitThreshold(0));
         public static final TalonFXConfiguration leftConfigs = configs;
         public static final TalonFXConfiguration rightConfigs = configs.withMotorOutput(
