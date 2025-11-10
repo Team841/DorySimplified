@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public boolean hasAlgae() {
-        return this.motor.getStatorCurrent().getValueAsDouble() > 30;
+        return this.motor.getStatorCurrent().getValueAsDouble() > 50;
     }
 
     public StatusCode setControl(DutyCycleOut control) {
@@ -109,6 +109,10 @@ public class Shooter extends SubsystemBase{
         ).withName("runShooterScoreCommand")
                 .withTimeout(timout)
                 .finallyDo(this::stopMotor);
+    }
+
+    public Command runShooterScore(Escalator.Position atPosition) {
+        return runShooterScore(atPosition, 0.0);
     }
 
     /**

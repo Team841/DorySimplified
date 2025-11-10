@@ -74,6 +74,8 @@ public class Control {
     public final Command manualShoot;
     public final Command stopShooter;
 
+    public final Command swapMode;
+
     public final Command driveCommand;
 
     private final CommandXboxController joystick = new CommandXboxController(0);
@@ -209,9 +211,6 @@ public class Control {
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear)
                         ),
-                        this.shooter.runShooterScore(
-                                Escalator.Position.Barge, 
-                                scoreTimeout),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
                                 new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
@@ -250,9 +249,6 @@ public class Control {
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear)
                         ),
-                        this.shooter.runShooterScore(
-                                Escalator.Position.Barge, 
-                                scoreTimeout),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
                                 new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
@@ -291,9 +287,6 @@ public class Control {
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear)
                         ),
-                        this.shooter.runShooterScore(
-                                Escalator.Position.Barge, 
-                                scoreTimeout),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
                                 new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
@@ -317,7 +310,7 @@ public class Control {
                                 new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)))
                 ),
                 
-                // Low Algae
+                // Processor
                 new SequentialCommandGroup(
                         new SequentialCommandGroup(
                                 new MoveCommand(
@@ -332,9 +325,6 @@ public class Control {
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear)
                         ),
-                        this.shooter.runShooterScore(
-                                Escalator.Position.HomeAndIntake, 
-                                scoreTimeout),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
                                 new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
@@ -397,6 +387,28 @@ public class Control {
                         () -> !this.isCoralMode
                 );
 
+        this.swapMode = 
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> this.ChangeMode()),
+                        new ConditionalCommand(
+                                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Stopped)), 
+                                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold)), 
+                                () -> this.isCoralMode),
+                        new ConditionalCommand(
+                                new PivotMoveCommand(
+                                        this.algaePivot, 
+                                        AlgaePivot.AlgaePivotPosition.Stow, 
+                                        this.shooter::hasAlgae, 
+                                        this.shooter::shooterHasCoral, 
+                                        this.shooter::escalatorClear), 
+                                new PivotMoveCommand(
+                                        this.algaePivot, 
+                                        AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                        this.shooter::hasAlgae, 
+                                        this.shooter::shooterHasCoral, 
+                                        this.shooter::escalatorClear), 
+                                () -> this.isCoralMode) 
+                );
         this.driveCommand = Drive(
             this.drivetrain, 
             () -> -joystick.getLeftY(),
@@ -588,7 +600,7 @@ public class Control {
 
 //        joystick.rightStick().onFalse(escalatorGoHome);
         
-        joystick.rightBumper().onTrue(new InstantCommand(() -> this.ChangeMode()));
+        joystick.rightBumper().onTrue(swapMode);
 
         joystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake).onFalse(stopShooter);
 
