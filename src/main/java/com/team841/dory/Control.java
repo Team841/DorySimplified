@@ -213,7 +213,20 @@ public class Control {
                         ),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
-                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
+                                new ConditionalCommand(
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        () -> this.shooter.hasAlgae())
                         )
                 ),
                 () -> this.isCoralMode);
@@ -251,7 +264,20 @@ public class Control {
                         ),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
-                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
+                                new ConditionalCommand(
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        () -> this.shooter.hasAlgae())
                         )
                 ),
                 () -> this.isCoralMode);
@@ -289,13 +315,26 @@ public class Control {
                         ),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
-                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
+                                new ConditionalCommand(
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        () -> this.shooter.hasAlgae())
                         )
                 ),
                 () -> this.isCoralMode);
 
         this.noSnapAutoScoreL1 = new ConditionalCommand(
-                // L2
+                // L1
                 new SequentialCommandGroup(
                         new MoveCommand(
                                 this.escalator,
@@ -327,7 +366,20 @@ public class Control {
                         ),
                         new ParallelCommandGroup(
                                 new InstantCommand(() -> this.escalator.setPosition(Escalator.Position.HomeAndIntake, false)),
-                                new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.AlgaeStow, false))
+                                new ConditionalCommand(
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        () -> this.shooter.hasAlgae())
                         )
                 ),
                 () -> this.isCoralMode);
@@ -335,8 +387,8 @@ public class Control {
         this.intake = new ConditionalCommand(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow, false)),
-                        this.shooter.runShooterIntake(), 
-                        this.flapSystem.runIntake()
+                        this.shooter.runShooterIntake().onlyIf(() -> this.escalator.atPosition(Escalator.Position.HomeAndIntake)), 
+                        this.flapSystem.runIntake().onlyIf(() -> this.escalator.atPosition(Escalator.Position.HomeAndIntake))
                 ), 
                 new ConditionalCommand(
                         new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeIntake), shooter),
@@ -344,8 +396,6 @@ public class Control {
                         (() -> !this.shooter.hasAlgae())
                 ), 
                 () -> this.isCoralMode);
-
-        //this.manualShoot = ManualShoot(this.escalator.getTarget());
 
         this.manualShoot = new ConditionalCommand(
                 new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL2AndL3), shooter), 
@@ -372,20 +422,27 @@ public class Control {
 
         this.pivotGoHome = 
                 new ConditionalCommand(
-                        new PivotMoveCommand(
-                                this.algaePivot, 
-                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
-                                this.shooter::hasAlgae, 
-                                this.shooter::shooterHasCoral, 
-                                this.shooter::escalatorClear),
+                        new ConditionalCommand(
+                                new PivotMoveCommand(
+                                        this.algaePivot, 
+                                        AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                        this.shooter::hasAlgae, 
+                                        this.shooter::shooterHasCoral, 
+                                        this.shooter::escalatorClear), 
+                                new PivotMoveCommand(
+                                        this.algaePivot, 
+                                        AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                        this.shooter::hasAlgae, 
+                                        this.shooter::shooterHasCoral, 
+                                        this.shooter::escalatorClear), 
+                                () -> this.shooter.hasAlgae()),
                         new PivotMoveCommand(
                                 this.algaePivot, 
                                 AlgaePivot.AlgaePivotPosition.Stow, 
                                 this.shooter::hasAlgae, 
                                 this.shooter::shooterHasCoral, 
                                 this.shooter::escalatorClear),
-                        () -> !this.isCoralMode
-                );
+                        () -> !this.isCoralMode);
 
         this.swapMode = 
                 new SequentialCommandGroup(
@@ -401,12 +458,20 @@ public class Control {
                                         this.shooter::hasAlgae, 
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear), 
-                                new PivotMoveCommand(
-                                        this.algaePivot, 
-                                        AlgaePivot.AlgaePivotPosition.AlgaeStow, 
-                                        this.shooter::hasAlgae, 
-                                        this.shooter::shooterHasCoral, 
-                                        this.shooter::escalatorClear), 
+                                new ConditionalCommand(
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeHighStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        new PivotMoveCommand(
+                                                this.algaePivot, 
+                                                AlgaePivot.AlgaePivotPosition.AlgaeStow, 
+                                                this.shooter::hasAlgae, 
+                                                this.shooter::shooterHasCoral, 
+                                                this.shooter::escalatorClear), 
+                                        () -> this.shooter.hasAlgae()),
                                 () -> this.isCoralMode) 
                 );
         this.driveCommand = Drive(
@@ -436,38 +501,7 @@ public class Control {
                 drivetrain.setControl(drivetrain.drive.withVelocityX(throttleFieldFrame).withVelocityY(strafeFieldFrame).withRotationalRate(angularVel));
             }, drivetrain);
     }
-    /* 
-    public Command ManualShoot(Escalator.Position position) {
-        
-        if (this.isCoralMode) {
-                if (position == Escalator.Position.L4) {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL4));
-                } else if (position == Escalator.Position.L1) {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShooterL1));
-                } else if (position == Escalator.Position.L3 || escalator.getTarget() == Escalator.Position.L2) {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL2AndL3));
-                } else if (position == Escalator.Position.Barge) {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Barge));
-                } else if (position == Escalator.Position.HomeAndIntake) {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Processor));
-                } else {
-                        return new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.ShootL2AndL3));
-                }
-        } else {
-                return new InstantCommand(() -> this.shooter.setDutyCycle(0.3));
-        }
-        
-    }
-    */
-    /*
-    public Command StopShooter(boolean isInCoralMode) {
-        if (isInCoralMode) {
-                return new InstantCommand(() -> this.shooter.setDutyCycle(0));
-        } else {
-                return new InstantCommand(() -> this.shooter.setDutyCycle(-0.1));
-        }
-    }
-    */
+
     public void ChangeMode() {
         if (this.isCoralMode) {
                 this.isCoralMode = false;
@@ -476,27 +510,10 @@ public class Control {
         }
     }
     
-    
     /**
      * Sequences intaking that runs shooter, passive holds down the elevator, and stops when we have a coral.
      * @return Command
      */
-//    public Command Intake() {
-//        return new ConditionalCommand(
-//                new ParallelRaceGroup(
-//                        this.shooter.runShooterIntake(), this.flapSystem.runIntake()
-//                ), new SequentialCommandGroup(
-//                        this.escalator.passiveHoldDown().withTimeout(0.2), new ParallelRaceGroup(
-//                                this.shooter.runShooterIntake(), this.flapSystem.runIntake()
-//                        )
-//
-//                ).onlyIf(this.shooter::escalatorClear), // Make sure that the elevator is clear before running.
-//                // move elevator down if not at intaking position
-//                () -> this.escalator.atPosition(Escalator.Position.HomeAndIntake)
-//        );
-
-//        return new ParallelCommandGroup(this.shooter.runShooterIntake(), this.flapSystem.runIntake());
-//   }
 
     /**
      * Pose to Pose autoAlign command that will drive to the closest scoring command.
@@ -592,22 +609,19 @@ public class Control {
         joystick.leftBumper().onFalse(pivotGoHome);
 
         /* Automated */
-//        joystick.rightStick().and(joystick.y()).whileTrue(snapScoreL4);
+        //joystick.rightStick().and(joystick.y()).whileTrue(snapScoreL4);
 
-//        joystick.rightStick().and(joystick.x()).whileTrue(snapScoreL3);
+        //joystick.rightStick().and(joystick.x()).whileTrue(snapScoreL3);
 
-//        joystick.rightStick().and(joystick.b()).whileTrue(snapScoreL2);
+        //joystick.rightStick().and(joystick.b()).whileTrue(snapScoreL2);
 
-//        joystick.rightStick().onFalse(escalatorGoHome);
+        //joystick.rightStick().onFalse(escalatorGoHome);
         
         joystick.rightBumper().onTrue(swapMode);
 
         joystick.leftTrigger().and(() -> !this.shooter.shooterHasCoral()).whileTrue(intake).onFalse(stopShooter);
 
         joystick.rightTrigger().onTrue(manualShoot).onFalse(stopShooter);
-
-        // joystick.a().whileTrue(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(-0.5), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0), flapSystem));
-        // Zjoystick.a().whileTrue(new InstantCommand(() -> this.shooter.setDutyCycle(-.5), shooter)).onFalse(new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter));
 
         // joystick.start().onTrue(new InstantCommand(escalator::zero, escalator));
 
@@ -623,8 +637,6 @@ public class Control {
                 new InstantCommand(() -> this.flapSystem.setFlapperDutyCycle(-0.25), flapSystem))
                 .onFalse(new InstantCommand(() -> this.flapSystem.stopFlapper(), flapSystem));
 
-        
-
         joystick.leftStick().onTrue(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> this.shooter.setDutyCycle(0.5)),
@@ -635,7 +647,7 @@ public class Control {
                         new InstantCommand(() -> this.flapSystem.setIntakeDutyCycle(0))
                 ));
 
-        //joystick.rightStick().onTrue(new InstantCommand(() -> this.flapSystem.startClimb(), flapSystem));
+        joystick.rightStick().onTrue(new InstantCommand(() -> this.flapSystem.startClimb(), flapSystem));
 
         //joystick.leftStick().whileTrue(new InstantCommand(() -> this.flapSystem.reverseClimb(), flapSystem)).onFalse(new InstantCommand(() -> this.flapSystem.stopClimb(), flapSystem));
     }

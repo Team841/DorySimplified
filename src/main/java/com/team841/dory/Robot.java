@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   private final Shooter shooter;
   private final FlapSystemAndHang flapSystem;
   private final AlgaePivot algaePivot;
-//  private final LED led;
+  private final LED led;
 
   private final Control control;
 
@@ -53,9 +53,10 @@ public class Robot extends TimedRobot {
     this.shooter = new Shooter();
     this.flapSystem = new FlapSystemAndHang();
     this.algaePivot = new AlgaePivot();
-//    this.led = new LED(this.shooter, this.flapSystem);
     
     this.control = new Control(drivetrain, escalator, algaePivot, shooter, flapSystem);
+
+    this.led = new LED(this.shooter, this.flapSystem, () -> this.control.isCoralMode);
     
     DogLog.setOptions(new DogLogOptions().withLogExtras(true).withCaptureDs(true).withCaptureNt(true));
 

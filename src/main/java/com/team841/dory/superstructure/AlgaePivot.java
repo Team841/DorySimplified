@@ -67,7 +67,8 @@ public class AlgaePivot extends SubsystemBase {
         BargeScore(32),
         ProcessorScore(5),
         Stow(0),
-        AlgaeStow(3);
+        AlgaeStow(3),
+        AlgaeHighStow(32);
 
         private final double rotationsPosition;
 
