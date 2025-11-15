@@ -15,12 +15,12 @@ public class SC {
         // with out coral
         public static Slot0Configs slot0Configs =
                 new Slot0Configs()
-                        .withKP(0.55)
-                        .withKD(0)
-                        .withKS(0)
+                        .withKP(1)
+                        .withKD(0.05)
+                        .withKS(0.05)
                         .withKV(0.12)
                         .withKA(0.001)
-                        .withKG(0.4)
+                        .withKG(0.425)
                         .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
 
@@ -38,8 +38,8 @@ public class SC {
                         .withMotionMagic(
                                 new MotionMagicConfigs()
                                         .withMotionMagicCruiseVelocity(60)
-                                        .withMotionMagicAcceleration(40)
-                                        .withMotionMagicJerk(5)
+                                        .withMotionMagicAcceleration(50)
+                                        .withMotionMagicJerk(10)
                                         .withMotionMagicExpo_kA(0.1)
                                         .withMotionMagicExpo_kV(0.12))
                         .withMotorOutput(

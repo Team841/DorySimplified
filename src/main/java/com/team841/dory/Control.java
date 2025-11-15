@@ -78,7 +78,7 @@ public class Control {
 
     public final Command driveCommand;
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    public final CommandXboxController joystick = new CommandXboxController(0);
 
     public boolean isCoralMode = true;
 
@@ -609,13 +609,13 @@ public class Control {
         joystick.leftBumper().onFalse(pivotGoHome);
 
         /* Automated */
-        //joystick.rightStick().and(joystick.y()).whileTrue(snapScoreL4);
+        joystick.back().and(joystick.y()).whileTrue(snapScoreL4);
 
-        //joystick.rightStick().and(joystick.x()).whileTrue(snapScoreL3);
+        joystick.back().and(joystick.x()).whileTrue(snapScoreL3);
 
-        //joystick.rightStick().and(joystick.b()).whileTrue(snapScoreL2);
+        joystick.back().and(joystick.b()).whileTrue(snapScoreL2);
 
-        //joystick.rightStick().onFalse(escalatorGoHome);
+        joystick.back().onFalse(escalatorGoHome);
         
         joystick.rightBumper().onTrue(swapMode);
 

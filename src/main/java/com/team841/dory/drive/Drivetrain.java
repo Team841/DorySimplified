@@ -89,9 +89,9 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
     public final SwerveRequest.FieldCentric drive =
         new SwerveRequest.FieldCentric()
                 //.withDeadband(MaxSpeed * 0.1)
-                .withDeadband(0.06)
+                .withDeadband(0.07)
                 //.withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-                .withRotationalDeadband(0.06)
+                .withRotationalDeadband(0.07)
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                 .withSteerRequestType(SwerveModule.SteerRequestType.Position);
 
