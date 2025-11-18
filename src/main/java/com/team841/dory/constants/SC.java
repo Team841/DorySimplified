@@ -20,7 +20,7 @@ public class SC {
                         .withKS(0)
                         .withKV(0.12)
                         .withKA(0.001)
-                        .withKG(0.3)
+                        .withKG(0.425)
                         .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
 
@@ -38,7 +38,7 @@ public class SC {
                         .withMotionMagic(
                                 new MotionMagicConfigs()
                                         .withMotionMagicCruiseVelocity(60)
-                                        .withMotionMagicAcceleration(20)
+                                        .withMotionMagicAcceleration(35)
                                         .withMotionMagicJerk(5)
                                         .withMotionMagicExpo_kA(0.1)
                                         .withMotionMagicExpo_kV(0.12))
