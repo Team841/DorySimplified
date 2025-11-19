@@ -15,7 +15,7 @@ public class SC {
         // with out coral
         public static Slot0Configs slot0Configs =
                 new Slot0Configs()
-                        .withKP(1)
+                        .withKP(2)
                         .withKD(0.05)
                         .withKS(0.05)
                         .withKV(0.12)
@@ -67,8 +67,8 @@ public class SC {
                         .withKD(0)
                         .withKS(0)
                         .withKA(0)
-                        .withKV(0.12)
-                        .withKG(0)
+                        .withKV(0.2)
+                        .withKG(0.1)
                         .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
 
@@ -76,7 +76,7 @@ public class SC {
                 new TalonFXConfiguration()
                         .withSlot0(slot0PivotConfigs)
                         .withCurrentLimits(new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(20)
+                                .withStatorCurrentLimit(30)
                                 .withStatorCurrentLimitEnable(true)
                                 .withSupplyCurrentLimitEnable(true))
                         .withFeedback(
@@ -85,8 +85,8 @@ public class SC {
                                         .withRotorToSensorRatio(1))
                         .withMotionMagic(
                                 new MotionMagicConfigs()
-                                        .withMotionMagicCruiseVelocity(50)        
-                                        .withMotionMagicAcceleration(6)
+                                        .withMotionMagicCruiseVelocity(60)        
+                                        .withMotionMagicAcceleration(30)
                                         .withMotionMagicJerk(1)
                                         .withMotionMagicExpo_kA(0.12)
                                         .withMotionMagicExpo_kV(0.1))

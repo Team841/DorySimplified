@@ -111,6 +111,18 @@ public class Shooter extends SubsystemBase{
                 .finallyDo(this::stopMotor);
     }
 
+    public void coralShoot(Escalator.Position atPosition) {
+        if (atPosition == Escalator.Position.L4) {
+            setDutyCycle(ShooterSpeeds.ShootL4);
+        } else if (atPosition == Escalator.Position.L3 || atPosition == Escalator.Position.L2) {
+            setDutyCycle(ShooterSpeeds.ShootL2AndL3);
+        } else if (atPosition == Escalator.Position.L1) {
+            setDutyCycle(ShooterSpeeds.ShooterL1);
+        } else {
+            setDutyCycle(ShooterSpeeds.ShootL2AndL3);
+        }
+    }
+
     public Command runShooterScore(Escalator.Position atPosition) {
         return runShooterScore(atPosition, 0.0);
     }

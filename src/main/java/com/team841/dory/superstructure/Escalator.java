@@ -74,6 +74,10 @@ public class Escalator extends SubsystemBase{
         return Math.abs(rightMotor.getPosition().getValue().in(Units.Rotation) - position.getPosition()) < 0.5;
     }
 
+    public boolean hasTarget(Position position) {
+        return this.targetPosition == position;
+    }
+
     /**
      * Duty cycle holds down elevator command.
      * Because the PID turning is not the best, when intaking, we do a passive hold down
