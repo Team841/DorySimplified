@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.limelight.LimelightHelpers;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -61,27 +62,36 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
 
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
             new SwerveRequest.ApplyRobotSpeeds()
-                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                    .withSteerRequestType(SteerRequestType.Position);
     
     public final SwerveRequest.ApplyRobotSpeeds m_robotSpeeds =
-            new SwerveRequest.ApplyRobotSpeeds();
+            new SwerveRequest.ApplyRobotSpeeds()
+                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                    .withSteerRequestType(SteerRequestType.Position);
 
     public ProfiledPIDController vxController = new ProfiledPIDController(
-            10.5, 0.01, 0.1, new TrapezoidProfile.Constraints(
+            9.4, 0.01, 0.1, new TrapezoidProfile.Constraints(
                     4.25, 1.9) // max velocity, max acceleration
     );
     public ProfiledPIDController vyController = new ProfiledPIDController(
-            10.5, 0.01, 0.1, new TrapezoidProfile.Constraints(
+            9.4, 0.01, 0.1, new TrapezoidProfile.Constraints(
                     4.25, 1.9) // max velocity, max acceleration
     );
 
-    public final SwerveRequest.FieldCentricFacingAngle driveHeading = new SwerveRequest.FieldCentricFacingAngle()
-            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+    public final SwerveRequest.FieldCentricFacingAngle driveHeading =
+            new SwerveRequest.FieldCentricFacingAngle()
+                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                .withSteerRequestType(SwerveModule.SteerRequestType.Position)
+                    .withForwardPerspective(SwerveRequest.ForwardPerspectiveValue.BlueAlliance)
+                    .withDesaturateWheelSpeeds(false);
     
     public final SwerveRequest.FieldCentric drive =
         new SwerveRequest.FieldCentric()
-                .withDeadband(MaxSpeed * 0.1)
-                .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                //.withDeadband(MaxSpeed * 0.1)
+                .withDeadband(0.07)
+                //.withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                .withRotationalDeadband(0.07)
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                 .withSteerRequestType(SwerveModule.SteerRequestType.Position);
 
@@ -91,9 +101,9 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         this.vxController.setTolerance(Units.inchesToMeters(0.5));
         this.vyController.setTolerance(Units.inchesToMeters(0.5));
 
-        driveHeading.HeadingController.setPID(34.459, 0, 2.5039);
+        driveHeading.HeadingController.setPID(23.356, 0, 2.5039);
         driveHeading.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-        driveHeading.HeadingController.setTolerance(0.1, 0.1);
+        driveHeading.HeadingController.setTolerance(0.01, 0.01);
     }
 
     @Override

@@ -15,30 +15,21 @@ public class SC {
         // with out coral
         public static Slot0Configs slot0Configs =
                 new Slot0Configs()
-                        .withKP(9.5)
-                        .withKD(1.5)
-                        .withKS(9.85 - 3)
-                        .withKA(0.35)
-                        .withKG(23.15)
+                        .withKP(2)
+                        .withKD(0.05)
+                        .withKS(0.05)
+                        .withKV(0.12)
+                        .withKA(0.001)
+                        .withKG(0.425)
                         .withGravityType(GravityTypeValue.Elevator_Static)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
-        // with coral
-        public static Slot1Configs slot1Configs =
-                new Slot1Configs()
-                        .withKP(10.5)
-                        .withKD(1.4)
-                        .withKS(9.85 - 1.5)
-                        .withKA(0.19)
-                        .withKG(25.75)
-                        .withGravityType(GravityTypeValue.Elevator_Static)
-                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
+
         // public static double FF = 12.2;
         private static final TalonFXConfiguration configs =
                 new TalonFXConfiguration()
                         .withSlot0(slot0Configs)
-                        .withSlot1(slot1Configs)
                         .withCurrentLimits(new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(60)
+                                .withStatorCurrentLimit(75)
                                 .withStatorCurrentLimitEnable(true)
                                 .withSupplyCurrentLimitEnable(true))
                         .withFeedback(
@@ -46,9 +37,11 @@ public class SC {
                                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
                         .withMotionMagic(
                                 new MotionMagicConfigs()
-                                        .withMotionMagicAcceleration(90)
-                                        .withMotionMagicCruiseVelocity(120)
-                                        .withMotionMagicJerk(1200))
+                                        .withMotionMagicCruiseVelocity(60)
+                                        .withMotionMagicAcceleration(50)
+                                        .withMotionMagicJerk(10)
+                                        .withMotionMagicExpo_kA(0.1)
+                                        .withMotionMagicExpo_kV(0.12))
                         .withMotorOutput(
                                 new MotorOutputConfigs()
                                         .withNeutralMode(NeutralModeValue.Brake))
@@ -61,7 +54,52 @@ public class SC {
         public static final TalonFXConfiguration leftConfigs = configs;
         public static final TalonFXConfiguration rightConfigs = configs.withMotorOutput(
                 configs.MotorOutput.withInverted(InvertedValue.Clockwise_Positive)
-        );
+        ); 
+    }
+
+    public static class AlgaePivot {
+        public static int pivotMotorId = 40;
+
+        // PID for both with and without algae, kG is not neccesary, so motion can be static
+        public static Slot0Configs slot0PivotConfigs =
+                new Slot0Configs()
+                        .withKP(2)
+                        .withKD(0)
+                        .withKS(0)
+                        .withKA(0)
+                        .withKV(0.2)
+                        .withKG(0.1)
+                        .withGravityType(GravityTypeValue.Elevator_Static)
+                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign);
+
+        public static final TalonFXConfiguration pivotConfigs =
+                new TalonFXConfiguration()
+                        .withSlot0(slot0PivotConfigs)
+                        .withCurrentLimits(new CurrentLimitsConfigs()
+                                .withStatorCurrentLimit(30)
+                                .withStatorCurrentLimitEnable(true)
+                                .withSupplyCurrentLimitEnable(true))
+                        .withFeedback(
+                                new FeedbackConfigs()
+                                        .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
+                                        .withRotorToSensorRatio(1))
+                        .withMotionMagic(
+                                new MotionMagicConfigs()
+                                        .withMotionMagicCruiseVelocity(60)        
+                                        .withMotionMagicAcceleration(30)
+                                        .withMotionMagicJerk(1)
+                                        .withMotionMagicExpo_kA(0.12)
+                                        .withMotionMagicExpo_kV(0.1))
+                        .withMotorOutput(
+                                new MotorOutputConfigs()
+                                        .withNeutralMode(NeutralModeValue.Brake)
+                                        .withInverted(InvertedValue.Clockwise_Positive))
+                        .withSoftwareLimitSwitch(
+                                new SoftwareLimitSwitchConfigs()
+                                        .withForwardSoftLimitEnable(true)
+                                        .withReverseSoftLimitEnable(true)
+                                        .withForwardSoftLimitThreshold(32)
+                                        .withReverseSoftLimitThreshold(0));
     }
 
     public static class Shooter {
@@ -72,6 +110,8 @@ public class SC {
         public static double manualShootDutyCycleL4 = 0.5;
         public static double manualShootDutyCycleL3L2 = 0.3;
         public static double manualShootDutyCycleL1 = 0.17;
+
+        public static double algaeCurrentMinimum = -1;
 
         public static TalonFXConfiguration configs =
                 new TalonFXConfiguration()

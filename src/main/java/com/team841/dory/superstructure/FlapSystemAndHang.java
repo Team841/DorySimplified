@@ -61,24 +61,22 @@ public class FlapSystemAndHang extends SubsystemBase{
         this.reverseHang = false;
         this.timer = new Timer();
         this.timer.reset();
-
-        // this.hangMotor2.setControl(new Follower(SC.flapSystem.hangMotor, false));
     }
 
     public void periodic() {
         DogLog.log("FlapSystemAndHang/HangAngle", this.getHangAngle());
         DogLog.log("FlapSystemAndHang/HangState", this.hangState);
         DogLog.log("FlapSystemAndHang/HangGoodToRun", this.hangGoodToRun());
-
+     
         if (this.hangGoodToRun()) {
             this.climbPeriodic();
         } else {
             this.setHangDutyCycle(0);
             this.setGrabDutyCycle(0);
         }
-        
+    
     }
-
+    
     private void climbPeriodic() {
         if (this.hangState.equals("Deploying")) {
             this.setGrabDutyCycle(0);
@@ -118,6 +116,7 @@ public class FlapSystemAndHang extends SubsystemBase{
         }
     }
     
+    
     public Command runIntake() {
         return new RunCommand(
                 () -> {
@@ -126,7 +125,7 @@ public class FlapSystemAndHang extends SubsystemBase{
         ).withName("runShooterIntakeCommand")
                 .finallyDo(this::stopIntake);
     }
-
+    
     public void startClimb() {
         if (DriverStation.getMatchTime() < 20) {
             if (this.hangState.equals("Stowed")) {
@@ -159,19 +158,20 @@ public class FlapSystemAndHang extends SubsystemBase{
     private void setHangState(String state) {
         this.hangState = state;
     }
-
+    
+    
     public boolean flapHasCoral() {
         return this.canrange.getDistance().getValue().magnitude() < 0.05;
     }
-
+    
     public double getHangAngle() {
         return this.throughbore.getAbsolutePosition().getValueAsDouble();
     }
-
+    
     public boolean hangGoodToRun() {
         return this.getHangAngle() < 0.123;
     }
-
+    
     public void setIntakeDutyCycle(double output) {
         this.latestStatusCode = setControlIntake(dutyCycle.withOutput(output));
     }
@@ -179,7 +179,7 @@ public class FlapSystemAndHang extends SubsystemBase{
     public void setFlapperDutyCycle(double output) {
         this.latestStatusCode = setControlFlapper(dutyCycle.withOutput(output));
     }
-
+    
     public void setHangDutyCycle(double output) {
         this.latestStatusCode = setControlHang(dutyCycle.withOutput(output));
     }
@@ -187,7 +187,7 @@ public class FlapSystemAndHang extends SubsystemBase{
     public void setGrabDutyCycle(double output) {
         this.latestStatusCode = setControlGrab(dutyCycle.withOutput(output));
     }
-
+    
     public StatusCode setControlIntake(DutyCycleOut control) {
         return this.intakeMotor.setControl(control);
     }
@@ -195,7 +195,7 @@ public class FlapSystemAndHang extends SubsystemBase{
     public StatusCode setControlFlapper(DutyCycleOut control) {
         return this.flapMotor.setControl(control);
     }
-
+     
     public StatusCode setControlHang(DutyCycleOut control) {
         return this.hangMotor.setControl(control);
     }
@@ -203,7 +203,7 @@ public class FlapSystemAndHang extends SubsystemBase{
     public StatusCode setControlGrab(DutyCycleOut control) {
         return this.grabMotor.setControl(control);
     }
-
+    
     public void stopIntake() {
         this.intakeMotor.stopMotor();
     }
@@ -211,8 +211,9 @@ public class FlapSystemAndHang extends SubsystemBase{
     public void stopFlapper() {
         this.flapMotor.stopMotor();
     }
-
+    
     public void stopHang() {
         this.hangMotor.stopMotor();
     }
+    
 }

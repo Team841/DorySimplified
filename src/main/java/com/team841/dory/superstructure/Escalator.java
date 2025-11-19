@@ -4,7 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team841.dory.constants.RC;
 import com.team841.dory.constants.SC;
@@ -23,8 +23,7 @@ public class Escalator extends SubsystemBase{
 
     Follower leftFollower = new Follower(SC.Escalator.right, true);
 
-    MotionMagicTorqueCurrentFOC withOutCoralControl = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
-    MotionMagicTorqueCurrentFOC withCoralControl = new MotionMagicTorqueCurrentFOC(0).withSlot(1);
+    MotionMagicExpoVoltage control = new MotionMagicExpoVoltage(0).withSlot(0).withEnableFOC(true);
     DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
     StatusCode[] latestStatus;
@@ -59,9 +58,9 @@ public class Escalator extends SubsystemBase{
      */
     public void setPosition(Position position, boolean hasCoral) {
         if (hasCoral) {
-            this.latestStatus = setControl(withCoralControl.withPosition(position.getPosition()));
+            this.latestStatus = setControl(control.withPosition(position.getPosition()));
         } else {
-            this.latestStatus = setControl(withOutCoralControl.withPosition(position.getPosition()));
+            this.latestStatus = setControl(control.withPosition(position.getPosition()));
         }
 
         this.targetPosition = position;
@@ -73,6 +72,10 @@ public class Escalator extends SubsystemBase{
 
     public boolean atPosition(Position position) {
         return Math.abs(rightMotor.getPosition().getValue().in(Units.Rotation) - position.getPosition()) < 0.5;
+    }
+
+    public boolean hasTarget(Position position) {
+        return this.targetPosition == position;
     }
 
     /**
@@ -98,7 +101,7 @@ public class Escalator extends SubsystemBase{
      */
     public Command goUp() {
         return new RunCommand(
-                () -> this.setControl(this.dutyCycle.withOutput(0.1)), this)
+                () -> this.setControl(this.dutyCycle.withOutput(0.3)), this)
                 .withName("EscalatorGoUp")
                 .finallyDo(() -> this.setControl(this.dutyCycle.withOutput(0)));
     }
@@ -108,7 +111,7 @@ public class Escalator extends SubsystemBase{
      * @return Command
      */
     public Command goDown() {
-        return new RunCommand(() -> this.setControl(this.dutyCycle.withOutput(-0.1)), this).withName("EscalatorGoDown").finallyDo(() -> this.setControl(this.dutyCycle.withOutput(0)));
+        return new RunCommand(() -> this.setControl(this.dutyCycle.withOutput(-0.3)), this).withName("EscalatorGoDown").finallyDo(() -> this.setControl(this.dutyCycle.withOutput(0)));
     }
 
     public StatusCode[] setControl(ControlRequest control) {
@@ -126,11 +129,15 @@ public class Escalator extends SubsystemBase{
      */
     public enum Position {
         HomeAndIntake(0),
-        L1(2.8),
-        L2(5.118 - 0.26123),
-        L3(11.5463 - 0.26123),
-        L4(22.0844 - 0.26123 + 0.45),
-        Hold(7.0), Other(-1);
+        L1(4.5 * 0.5555),
+        L2(9.12 * 0.5555),
+        L3(21.2 * 0.5555),
+        L4(40.5 * 0.5555),
+        Hold(7.0 * 0.5555), Other(-1),
+        Barge(35 * 0.5555),
+        HighAlgae(24 * 0.5555),
+        LowAlgae(13 * 0.5555),
+        ;
 
         private final double position;
 
