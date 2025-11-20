@@ -28,7 +28,7 @@ public class AlgaePivot extends SubsystemBase {
     public AlgaePivot() {
         this.pivotMotor.getConfigurator().apply(SC.AlgaePivot.pivotConfigs);
         this.pivotMotor.setNeutralMode(NeutralModeValue.Brake);
-        this.resetPositions(0);
+        this.zero();
     }
 
     @Override
@@ -39,8 +39,7 @@ public class AlgaePivot extends SubsystemBase {
         DogLog.log("AlgaePivot/PositionRadian", pivotMotorPos.in(Units.Rotation));
     }
 
-    public void setPosition(AlgaePivotPosition position, boolean hasAlgae) {
-            
+    public void setPosition(AlgaePivotPosition position) {
         this.latestStatus = setControl(pivotControl.withPosition(position.getPosition()));
         this.pivotTargetPosition = position;
     }
@@ -53,8 +52,16 @@ public class AlgaePivot extends SubsystemBase {
         this.pivotMotor.setPosition(position);
     }
 
+    public void zero() {
+        this.resetPositions(0);
+    }
+
     public AlgaePivotPosition getTarget() {
         return this.pivotTargetPosition;
+    }
+
+    public boolean hasTarget(AlgaePivotPosition position) {
+        return this.pivotTargetPosition == position;
     }
 
     public boolean atPosition(AlgaePivotPosition position) {
