@@ -281,7 +281,7 @@ public class Control {
                                                 AlgaePivot.AlgaePivotPosition.AlgaeStow), 
                                         () -> this.shooter.hasAlgae())
                         ), 
-                        new ParallelCommandGroup(
+                        new SequentialCommandGroup(
                                 new MoveCommand(
                                         this.escalator, 
                                         Escalator.Position.HighAlgae, 
@@ -338,7 +338,7 @@ public class Control {
                                                 AlgaePivot.AlgaePivotPosition.AlgaeStow), 
                                         () -> this.shooter.hasAlgae())
                         ), 
-                        new ParallelCommandGroup(
+                        new SequentialCommandGroup(
                                 new MoveCommand(
                                         this.escalator, 
                                         Escalator.Position.LowAlgae, 
