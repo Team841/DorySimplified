@@ -398,14 +398,14 @@ public class Control {
                         new ParallelCommandGroup(
                                 new MoveCommand(
                                         this.escalator, 
-                                        Escalator.Position.HomeAndIntake, 
+                                        Escalator.Position.GroundAlgae, 
                                         this.shooter::shooterHasCoral, 
                                         this.shooter::escalatorClear),
                                 new PivotMoveCommand(
                                         this.algaePivot, 
-                                        AlgaePivot.AlgaePivotPosition.ProcessorScore)
+                                        AlgaePivot.AlgaePivotPosition.GroundPickup)
                         ), 
-                        () -> this.algaePivot.hasTarget(AlgaePivot.AlgaePivotPosition.ProcessorScore)), 
+                        () -> this.algaePivot.hasTarget(AlgaePivot.AlgaePivotPosition.GroundPickup)), 
                 () -> this.isCoralMode);
         this.noSnapACommand_L1_Processor.addRequirements(escalator, algaePivot);
 
@@ -440,7 +440,8 @@ public class Control {
                         this.escalator, 
                         Escalator.Position.HomeAndIntake, 
                         this.shooter::shooterHasCoral, 
-                        this.shooter::escalatorClear),
+                        this.shooter::escalatorClear)
+                        .onlyIf(() -> !this.escalator.hasTarget(Escalator.Position.GroundAlgae)),
                 new ConditionalCommand(
                         new PivotMoveCommand(
                                 this.algaePivot,
@@ -449,6 +450,7 @@ public class Control {
                                 this.algaePivot, 
                                 AlgaePivot.AlgaePivotPosition.AlgaeStow), 
                         () -> this.isCoralMode)
+                        .onlyIf(() -> !this.algaePivot.hasTarget(AlgaePivot.AlgaePivotPosition.GroundPickup))
         );
         this.goToStowAfterScore.addRequirements(escalator, algaePivot);
 
@@ -515,7 +517,10 @@ public class Control {
         
         this.stopShooter = new ConditionalCommand(
                 new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter), 
-                new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter), 
+                new ConditionalCommand(
+                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeGroundIntakeHold), shooter), 
+                        new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter), 
+                        () -> this.algaePivot.hasTarget(AlgaePivot.AlgaePivotPosition.GroundPickup)),
                 () -> this.isCoralMode);
         this.manualShoot.addRequirements(shooter);
 

@@ -70,7 +70,7 @@ public class AlgaePivot extends SubsystemBase {
 
     public enum AlgaePivotPosition {
         ReefPickup(6),
-        GroundPickup(4),
+        GroundPickup(5.8),
         BargeScore(32),
         ProcessorScore(5),
         Stow(0),

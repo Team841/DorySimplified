@@ -153,7 +153,8 @@ public class Shooter extends SubsystemBase{
         AlgaeIntake(-0.4),
         Barge(0.6),
         Processor(0.5),
-        AlgaeHold(-0.12);
+        AlgaeHold(-0.12),
+        AlgaeGroundIntakeHold(0.05);
 
         private final double dutyCycle;
 
