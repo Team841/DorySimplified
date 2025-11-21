@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     
     this.control = new Control(drivetrain, escalator, algaePivot, shooter, flapSystem);
 
-    this.led = new LED(this.shooter, this.flapSystem, () -> this.control.isCoralMode);
+    this.led = new LED(this.shooter, this.flapSystem, () -> this.control.isCoralMode, () -> SmartDashboard.getBoolean("ManualMode", false));
     
     DogLog.setOptions(new DogLogOptions().withLogExtras(true).withCaptureDs(true).withCaptureNt(true));
 
@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putBoolean("ManualMode", false);
 
     Threads.setCurrentThreadPriority(true, 5);
   }
@@ -91,6 +92,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Match Time", Timer.getMatchTime());
     SmartDashboard.putBoolean("IsCoralMode", this.control.isCoralMode);
+    SmartDashboard.getBoolean("ManualMode", false);
   }
 
   @Override

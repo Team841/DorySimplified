@@ -490,7 +490,7 @@ public class Control {
 
         this.intake = new ConditionalCommand(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow), algaePivot),
+                        new InstantCommand(() -> this.algaePivot.setPosition(AlgaePivot.AlgaePivotPosition.Stow)),
                         this.shooter.runShooterIntake().onlyIf(() -> this.escalator.atPosition(Escalator.Position.HomeAndIntake)), 
                         this.flapSystem.runIntake().onlyIf(() -> this.escalator.atPosition(Escalator.Position.HomeAndIntake))
                 ), 
@@ -500,6 +500,8 @@ public class Control {
                         (() -> !this.shooter.hasAlgae())
                 ), 
                 () -> this.isCoralMode);
+        this.intake.addRequirements(shooter);
+
 
         // Command for shooting coral/algae, coral shoot speeds controlled within shooter subsystem
 
@@ -507,6 +509,7 @@ public class Control {
                 new InstantCommand(() -> this.shooter.coralShoot(this.escalator.getTarget()), shooter),
                 new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.Barge), shooter), 
                 () -> this.isCoralMode);
+        this.manualShoot.addRequirements(shooter);
 
         // Command for stopping shooter, stops if coral mode, static holds algae if not
         
@@ -514,6 +517,7 @@ public class Control {
                 new InstantCommand(() -> this.shooter.setDutyCycle(0), shooter), 
                 new InstantCommand(() -> this.shooter.setDutyCycle(Shooter.ShooterSpeeds.AlgaeHold), shooter), 
                 () -> this.isCoralMode);
+        this.manualShoot.addRequirements(shooter);
 
         // Command for driving swerve
 

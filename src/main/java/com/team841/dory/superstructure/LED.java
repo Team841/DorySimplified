@@ -23,8 +23,8 @@ public class LED extends SubsystemBase{
     private Shooter shooter;
     private Timer timer;
     private FlapSystemAndHang flapSystemAndHang;
-    private BooleanSupplier isCoralModeSupplier;
-    private boolean isCoralMode;
+    private BooleanSupplier isCoralModeSupplier, isManualModeSupplier;
+    private boolean isCoralMode, isManualMode;
 
     private final AddressableLED LED = new AddressableLED(0);
     private final AddressableLEDBuffer Buffer = new AddressableLEDBuffer(61);
@@ -68,11 +68,13 @@ public class LED extends SubsystemBase{
     LEDPattern patternGreenSolid = LEDPattern.solid(green);
     LEDPattern patternBlueSolid = LEDPattern.solid(blue);
 
-    public LED(Shooter shooter, FlapSystemAndHang flapSystemAndHang, BooleanSupplier isCoralModeSupplier) {
+    public LED(Shooter shooter, FlapSystemAndHang flapSystemAndHang, BooleanSupplier isCoralModeSupplier, BooleanSupplier isManualModeSupplier) {
         this.shooter = shooter;
         this.flapSystemAndHang = flapSystemAndHang;
         this.isCoralModeSupplier = isCoralModeSupplier;
         this.isCoralMode = isCoralModeSupplier.getAsBoolean();
+        this.isManualModeSupplier = isManualModeSupplier;
+        this.isManualMode = isManualModeSupplier.getAsBoolean();
         this.timer = new Timer();
         LED.setLength(Buffer.getLength());
         patternRedSolid.applyTo(BufferLeft);
@@ -84,6 +86,7 @@ public class LED extends SubsystemBase{
     public void periodic() {
         
         this.isCoralMode = isCoralModeSupplier.getAsBoolean();
+        this.isManualMode = isManualModeSupplier.getAsBoolean();
 
         if (DriverStation.getMatchTime() < 21 && DriverStation.getMatchTime() > 20) {
             this.timer.reset();
@@ -109,6 +112,9 @@ public class LED extends SubsystemBase{
         } else if (DriverStation.isAutonomousEnabled()) {
             patternPurpleScroll.applyTo(BufferLeft);
             patternPurpleScroll.applyTo(BufferRight);
+        } else if (this.isManualMode) {
+            patternRedSolid.applyTo(BufferLeft);
+            patternRedSolid.applyTo(BufferRight);
         } else if (this.flapSystemAndHang.hangState.equals("Deployed")) {
             patternBlueBreathe.applyTo(BufferLeft);
             patternBlueBreathe.applyTo(BufferRight);
