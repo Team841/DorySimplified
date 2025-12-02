@@ -151,6 +151,7 @@ public class Shooter extends SubsystemBase{
         ShootL4(-0.8),
         ShooterL1(-0.17),
         AlgaeIntake(-0.4),
+        AlgaeGroundIntake(0.4),
         Barge(0.6),
         Processor(0.5),
         AlgaeHold(-0.12),
