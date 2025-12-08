@@ -70,21 +70,6 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
                     .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                     .withSteerRequestType(SteerRequestType.Position);
 
-    public ProfiledPIDController vxController = new ProfiledPIDController(
-            9.4, 0.01, 0.1, new TrapezoidProfile.Constraints(
-                    4.25, 1.9) // max velocity, max acceleration
-    );
-    public ProfiledPIDController vyController = new ProfiledPIDController(
-            9.4, 0.01, 0.1, new TrapezoidProfile.Constraints(
-                    4.25, 1.9) // max velocity, max acceleration
-    );
-
-    public final SwerveRequest.FieldCentricFacingAngle driveHeading =
-            new SwerveRequest.FieldCentricFacingAngle()
-                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-                .withSteerRequestType(SwerveModule.SteerRequestType.Position)
-                    .withForwardPerspective(SwerveRequest.ForwardPerspectiveValue.BlueAlliance)
-                    .withDesaturateWheelSpeeds(false);
     
     public final SwerveRequest.FieldCentric drive =
         new SwerveRequest.FieldCentric()
@@ -98,12 +83,6 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
     public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules){
         super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, modules);
 
-        this.vxController.setTolerance(Units.inchesToMeters(0.5));
-        this.vyController.setTolerance(Units.inchesToMeters(0.5));
-
-        driveHeading.HeadingController.setPID(23.356, 0, 2.5039);
-        driveHeading.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-        driveHeading.HeadingController.setTolerance(0.01, 0.01);
     }
 
     @Override
@@ -114,61 +93,6 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
 
     public void setPose(Pose2d pose) {
         this.resetPose(pose);
-    }
-
-    /**
-     * Run calculation to the reefpose to find the polar angle the robot is to the reef in wpilib coordinate system
-     * @return double
-     */
-    public double getAngleToReefPolar() {
-        boolean isRed = RC.isRedAlliance.get();
-        Translation2d robotVector;
-
-        if (isRed) robotVector = this.getState().Pose.getTranslation().minus(Field.Positions.Reef.redTranslation2d);
-        else robotVector = this.getState().Pose.getTranslation().minus(Field.Positions.Reef.blueTranslation2d);
-
-        return Math.atan2(robotVector.getY(), robotVector.getX()) * 57.2957795131;
-    }
-
-    /**
-     * Calculate the scoring letter the robot is closet to based of the angle to the reef it is at
-     * @param angle the angle in degrees to determine the scoring position
-     * @return Field.ScoringPositions
-     */
-    public Field.ScoringPositions getScoringPosition(double angle) {
-        if (angle >= 0 && angle < 30) {
-            return Field.ScoringPositions.H;
-        } else if (angle >= 30 && angle < 60) {
-            return Field.ScoringPositions.I;
-        } else if (angle >= 60 && angle < 90) {
-            return Field.ScoringPositions.J;
-        } else if (angle >= 90 && angle < 120) {
-            return Field.ScoringPositions.K;
-        } else if (angle >= 120 && angle < 150) {
-            return Field.ScoringPositions.L;
-        } else if (angle >= 150 && angle < 180) {
-            return Field.ScoringPositions.A;
-        } else if (angle >= -180 && angle < -150) {
-            return Field.ScoringPositions.B;
-        } else if (angle >= -150 && angle < -120) {
-            return Field.ScoringPositions.C;
-        } else if (angle >= -120 && angle < -90) {
-            return Field.ScoringPositions.D;
-        } else if (angle >= -90 && angle < -60) {
-            return Field.ScoringPositions.E;
-        } else if (angle >= -60 && angle < -30) {
-            return Field.ScoringPositions.F;
-        } else {
-            return Field.ScoringPositions.G;
-        }
-    }
-
-    public Pose2d getPoseToScore(double angle) {
-        if (RC.isRedAlliance.get()) {
-            return getScoringPosition(angle).getPoseRed();
-        } else {
-            return getScoringPosition(angle).getPoseBlue();
-        }
     }
 
     public void configureAutoBuilder() {
